@@ -30,9 +30,9 @@ async def readUSBCert(path):
         # If success
         async with websockets.connect(uri) as websocket:
             await websocket.send('{"method": "readUSBCert"}')
-            # print(f"request to signslave > readUSBCert")
+            print(f"request to signslave > readUSBCert")
             signslaveresponse = await websocket.recv()
-            # print(f"signslave response: < {signslaveresponse}")
+            print(f"signslave response: < {signslaveresponse}")
             return signslaveresponse
     except ConnectionTimeoutError as e:
         return {"method": "readUSBCert", "status": "False"}
@@ -47,10 +47,10 @@ async def checkWebDisk():
         # If success
         async with websockets.connect(uri) as websocket:
             await websocket.send('{"method": "checkWebDisk"}')
-            # print(f"request to signslave > checkWebDisk")
+            print(f"request to signslave > checkWebDisk")
             signslaveresponse = await websocket.recv()
-            # print("ho ricevuto", signslaveresponse)
-            # print(f"signslave response: < {signslaveresponse}")
+            print("ho ricevuto", signslaveresponse)
+            print(f"signslave response: < {signslaveresponse}")
             return signslaveresponse
     except ConnectionTimeoutError as e:
         return {"method": "Signslave non in ascolto", "status": "False"}
@@ -92,7 +92,7 @@ async def controller(websocket, path):
             except:
                 response = {"method": "signslave", "status": "False"}
                 return
-            # print(f"> {response}")
+            print(f"> {response}")
             responses.append(response)
         if method == "checkWebDisk":
             # Check if signslave is alive!
@@ -100,23 +100,23 @@ async def controller(websocket, path):
               response = await checkWebDisk()
             except:
               response = {"method": "checkWebDisk", "status": "False"}
-            # print(f"> {response}")
+            print(f"> {response}")
             responses.append(response)
         if method == "fileFirma":
             # Take the parameter from the object
             path = str(command["parameter"])
-            # print(f"< Webapp sent this path: {path}")
+            print(f"< Webapp sent this path: {path}")
             response = await proxyclient(path)
-            # print(f"> {response}")
+            print(f"> {response}")
             responses.append(response)
         if method == "readUSBCert":
-            # print("[*] Reading certificate from digital signed file [*]")
-            # print(f"< Webapp requested readUSBCert: {path}")
+            print("[*] Reading certificate from digital signed file [*]")
+            print(f"< Webapp requested readUSBCert: {path}")
             response = await readUSBCert(path)
-            # print(f"> {response}")
+            print(f"> {response}")
             responses.append(response)
     responses = str(responses)
-    # print(responses)
+    print(responses)
     responses = responses.replace('"', '')
     await websocket.send(str(responses))
     # websocket.close()
